@@ -1,0 +1,24 @@
+[package]
+name = "sl-cli"
+description = "SubLink 命令行：规则管理 / 状态检测 / 应用与恢复 / 开机重建"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[[bin]]
+name = "sublink"
+path = "src/main.rs"
+
+[dependencies]
+sl-core = { path = "../sl-core" }
+serde_json = { workspace = true }
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { workspace = true, features = [
+  "Win32_Foundation",
+  "Win32_Storage_FileSystem",
+  "Win32_System_Console",
+  "Win32_System_SystemInformation",
+] }

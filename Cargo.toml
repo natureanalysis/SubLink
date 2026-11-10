@@ -1,0 +1,40 @@
+[workspace]
+resolver = "2"
+members = ["crates/sl-core", "crates/sl-cli", "crates/sl-gui"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.80"
+license = "MIT"
+authors = ["natureanalysis"]
+description = "Redirect software cache directories to a RAM disk with directory junctions, rebuilt at every logon"
+repository = "https://github.com/natureanalysis/SubLink"
+homepage = "https://github.com/natureanalysis/SubLink"
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rusqlite = { version = "0.31", features = ["bundled"] }
+walkdir = "2"
+filetime = "0.2"
+sha2 = "0.10"
+hex = "0.4"
+
+junction = "1.1"
+windows-sys = "0.60"
+
+# 依赖用 O1、自身代码用 O3：链接/搬运是 IO 密集，依赖侧优化级别对运行性能无影响，
+# 但能显著压低全量重建时间（与 Provenan 桌面端的构建惯例保持一致）。
+[profile.dev]
+incremental = true
+
+[profile.dev.package."*"]
+opt-level = 1
+
+[profile.release]
+opt-level = 3
+incremental = true
+
+[profile.release.package."*"]
+opt-level = 1

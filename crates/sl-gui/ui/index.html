@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="app.title">SubLink —— 缓存目录重定向</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="banners" class="banners"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">TD</div>
+      <div class="brand-text">
+        <div class="brand-title">SubLink</div>
+        <div class="brand-sub" id="root-summary" data-i18n="header.reading">正在读取…</div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <span class="stat" id="stat-summary"></span>
+      <div id="lang-switch" class="lang-switch" role="group" title="界面语言 / UI language">
+        <button type="button" class="lang-seg" data-lang="zh" aria-pressed="false">中文</button>
+        <button type="button" class="lang-seg" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <button id="btn-ops" class="btn ghost" data-i18n="nav.ops">运维日志</button>
+      <button id="btn-settings" class="btn ghost" data-i18n="nav.settings">设置</button>
+      <button id="btn-refresh" class="btn ghost" data-i18n="nav.refresh">刷新</button>
+    </div>
+  </header>
+
+  <section class="toolbar">
+    <button id="btn-add" class="btn primary" data-i18n="toolbar.add">＋ 添加规则</button>
+    <button id="btn-apply" class="btn" data-i18n="toolbar.apply">应用选中</button>
+    <button id="btn-restore" class="btn" data-i18n="toolbar.restore">恢复选中</button>
+    <button id="btn-clean" class="btn ghost" data-i18n="toolbar.clean" data-i18n-title="toolbar.clean_tip" title="按统一策略清理所有已选规则的目标目录">清理…</button>
+    <button id="btn-disk" class="btn ghost" data-i18n="toolbar.disk" data-i18n-title="toolbar.disk_tip" title="查看各规则与磁盘空间占用">空间统计</button>
+    <span class="divider"></span>
+    <button id="btn-categorize" class="btn ghost" data-i18n="toolbar.categorize" data-i18n-title="toolbar.categorize_tip" title="把勾选的规则统一移到某个分类">归类…</button>
+    <button id="btn-enable" class="btn ghost" data-i18n="toolbar.enable">开启</button>
+    <button id="btn-disable" class="btn ghost" data-i18n="toolbar.disable">关闭</button>
+    <button id="btn-delete" class="btn danger ghost" data-i18n="toolbar.delete">删除</button>
+    <button id="btn-undo" class="btn ghost" data-i18n="toolbar.undo" data-i18n-title="toolbar.undo_tip" title="把最近一次删除的规则记录恢复回来">撤销</button>
+    <span class="divider"></span>
+    <span class="more-wrap">
+      <button id="btn-more" class="btn ghost" data-i18n="toolbar.more" data-i18n-title="toolbar.more_tip" title="诊断与低频操作">更多 ▾</button>
+      <div id="more-menu" class="more-menu hidden">
+        <button id="btn-locks" class="menu-item" data-i18n="menu.locks">检测占用</button>
+        <button id="btn-relink" class="menu-item" data-i18n="menu.relink">仅重建链接</button>
+        <div class="menu-sep"></div>
+        <button id="btn-boot" class="menu-item" data-i18n="menu.boot">执行开机重建</button>
+        <div class="menu-sep"></div>
+        <div class="menu-head" data-i18n="menu.columns">显示列</div>
+        <label class="menu-item menu-check"><input type="checkbox" data-col="link" checked> <span data-i18n="menu.col_link">链接</span></label>
+        <label class="menu-item menu-check"><input type="checkbox" data-col="auto" checked> <span data-i18n="menu.col_auto">自动清理</span></label>
+        <label class="menu-item menu-check"><input type="checkbox" data-col="limit" checked> <span data-i18n="menu.col_limit">容量上限</span></label>
+        <label class="menu-item menu-check"><input type="checkbox" data-col="excludes" checked> <span data-i18n="menu.col_excludes">排除</span></label>
+        <label class="menu-item menu-check"><input type="checkbox" data-col="notes" checked> <span data-i18n="menu.col_notes">备注</span></label>
+        <div class="menu-sep"></div>
+        <button id="btn-restore-all" class="menu-item danger" data-i18n="menu.restore_all">恢复全部规则…</button>
+      </div>
+    </span>
+    <span class="spacer"></span>
+  </section>
+
+  <section class="filters">
+    <input id="search" class="input search" type="search" data-i18n-placeholder="filter.search" placeholder="搜索名称 / 源路径 / 目标子目录…">
+    <select id="filter-category" class="select"></select>
+    <label class="check"><input type="checkbox" id="only-enabled"> <span data-i18n="filter.only_enabled">只看已开启</span></label>
+    <label class="check"><input type="checkbox" id="only-attention"> <span data-i18n="filter.only_attention">只看需处理</span></label>
+    <label class="check"><input type="checkbox" id="show-hidden" data-i18n-title="filter.show_hidden_tip" title="把被隐藏的条目也显示出来（隐藏只影响显示，不影响开机重建与巡检）"> <span data-i18n="filter.show_hidden">显示已隐藏</span></label>
+    <label class="check"><input type="checkbox" id="sel-all"> <span data-i18n="filter.select_all">全选当前结果</span></label>
+    <span class="spacer"></span>
+    <span class="muted" id="filter-summary"></span>
+  </section>
+
+  <div class="workspace">
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-head">
+        <span class="sidebar-title" data-i18n="sidebar.title">分类</span>
+        <button id="btn-sidebar" class="icon-btn sidebar-toggle" type="button" aria-expanded="true" data-i18n-title="sidebar.toggle_tip" title="收起 / 展开分类侧栏">«</button>
+      </div>
+      <nav id="tree" class="tree"></nav>
+    </aside>
+    <div class="workspace-main">
+      <main class="table-wrap">
+        <table class="rules">
+          <thead>
+            <tr>
+              <th class="col-check"><input type="checkbox" id="sel-all-head" data-i18n-title="filter.select_all_tip" title="全选 / 取消全选当前结果"></th>
+              <th class="col-badge" data-sort="badge" data-i18n="table.status">状态</th>
+              <th class="col-name" data-sort="name" data-i18n="table.name">名称</th>
+              <th class="col-cat" data-sort="category" data-i18n="table.category">分类</th>
+              <th class="col-link" data-i18n="table.link">方式</th>
+              <th class="col-source" data-sort="source" data-i18n="table.source">源路径</th>
+              <th class="col-target" data-sort="target" data-i18n="table.target">目标（RAM 盘）</th>
+              <th class="col-usage" data-sort="usage" data-i18n="table.usage" data-i18n-title="table.usage_tip" title="规则缓存目录当前占用（点「空间统计」后更新）">占用(M)</th>
+              <th class="col-flag" data-sort="flag" data-i18n="table.flag" data-i18n-title="table.flag_tip" title="左：期望开启（● 开 / ○ 关）；右：开机自动重建（⟳ 参与）">旗标</th>
+              <th class="col-auto" data-i18n="table.auto">自动清理</th>
+              <th class="col-limit" data-i18n="table.limit">容量上限</th>
+              <th class="col-excludes" data-i18n="table.excludes">排除</th>
+              <th class="col-notes" data-i18n="table.notes">备注</th>
+              <th class="col-actions"></th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+        <div id="empty" class="empty hidden"></div>
+      </main>
+
+    </div>
+  </div>
+
+  <div id="progress" class="progress hidden">
+    <div class="progress-inner">
+      <div class="progress-title" id="progress-title" data-i18n="progress.working">处理中…</div>
+      <div class="progress-bar"><div id="progress-fill"></div></div>
+      <div class="progress-detail" id="progress-detail"></div>
+    </div>
+  </div>
+
+  <div id="modal" class="modal hidden">
+    <div class="modal-card" id="modal-card">
+      <div class="modal-head">
+        <span id="modal-title"></span>
+        <button id="modal-close" class="icon-btn" data-i18n-title="common.close" title="关闭">✕</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-foot" id="modal-foot"></div>
+    </div>
+  </div>
+
+  <div id="row-menu" class="ctx-menu hidden"></div>
+  <div id="toasts" class="toasts"></div>
+
+  <script src="i18n.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

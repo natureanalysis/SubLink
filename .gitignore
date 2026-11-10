@@ -1,0 +1,51 @@
+
+# IDE / editor
+AGENTS.md
+.idea/
+.vscode/
+.arts/
+.codeartsdoer/
+.tmp_comment_backup/
+.trae/
+.workbuddy/
+.claude/
+.loomy-attachments/
+.target-b5/
+
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+.tmp_*
+*.log
+*.err
+
+# 本地回归实验目录 / 数据库 / 界面截图暂存
+.qa/
+.tdlab/
+.tdshots/
+*.db
+*.db-wal
+*.db-shm
+
+# Rust
+/target/
+
+# tauri-build 每次构建自动生成的 schema 产物（不是手写源文件）
+crates/sl-gui/gen/
+# 本地启动脚本与运行时导出的个人配置（含本机 RAM 盘路径与个人软件缓存规则）
+start.bat
+sublink-config.json
+# 更名前的同类导出：文件仍在老用户的机器上，继续忽略，避免被误提交
+tempdirector-config.json
+tempdirector-config-*.json
+# 带日期后缀的同类导出（1029 / 1103 等）与临时调研产物：都是本机私有，不入库
+sublink-config-*.json
+_research/
+
+# 本地临时实验目录
+%TEMP%/
+
+# 浏览器自动化会话产物（dumate-browser-use）
+.dumate/

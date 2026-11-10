@@ -1,0 +1,73 @@
+name: Release
+
+# Triggered by pushing a version tag (v<version>, e.g. v0.1.0). The tag must
+# match the version in both Cargo.toml and crates/sl-gui/tauri.conf.json.
+# Builds the NSIS installer + a portable zip + SHA-256 checksums, and creates
+# a DRAFT release for manual review before publishing.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build and publish
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+
+      # tauri-action runs `cargo tauri build --bundles nsis` in crates/sl-gui
+      # (the UI is static files, so no npm step is needed), then creates the
+      # draft release and uploads the installer to it.
+      - name: Build app + NSIS installer, create draft release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: crates/sl-gui
+          tagName: v__VERSION__
+          releaseName: 'SubLink v__VERSION__'
+          releaseDraft: true
+          generateReleaseNotes: true
+          args: --bundles nsis
+
+      - name: Build portable zip and SHA-256 checksums
+        shell: pwsh
+        run: |
+          $ver = (Get-Content crates/sl-gui/tauri.conf.json -Raw | ConvertFrom-Json).version
+          if (-not $ver) { throw "could not read version from tauri.conf.json" }
+
+          $zip = "SubLink-$ver-portable-x64.zip"
+          $sums = "SubLink-$ver-SHA256SUMS.txt"
+          Remove-Item $zip, $sums -ErrorAction SilentlyContinue
+
+          # Short readme inside the portable zip (ASCII only).
+          $note = @(
+            "SubLink portable build (x64, Windows 10/11) - no installer, no admin rights needed."
+            "Run sublink-gui.exe for the UI, sublink.exe for the CLI."
+            "Data directory: %PROGRAMDATA%\SubLink (override with the SUBLINK_DATA_DIR env var)."
+            "Source and docs: https://github.com/natureanalysis/SubLink"
+          ) -join "`r`n"
+          $note | Out-File -FilePath README-portable.txt -Encoding ascii
+
+          Compress-Archive -Path target\release\sublink.exe, target\release\sublink-gui.exe, README-portable.txt -DestinationPath $zip
+
+          $items = Get-ChildItem "target\release\bundle\nsis\*.exe"
+          if (-not $items) { throw "nsis installer not found under target\release\bundle\nsis" }
+          $items += Get-Item $zip
+          Get-FileHash -Algorithm SHA256 $items |
+            ForEach-Object { "{0}  {1}" -f $_.Hash.ToLower(), (Split-Path $_.Path -Leaf) } |
+            Out-File -FilePath $sums -Encoding ascii
+
+          Add-Content $env:GITHUB_ENV "ZIP=$zip"
+          Add-Content $env:GITHUB_ENV "SUMS=$sums"
+          Get-Content $sums
+
+      - name: Upload portable zip and checksums to the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # NOTE: run: on windows-latest defaults to pwsh - use $env:VAR, not %VAR%.
+        run: gh release upload "${{ github.ref_name }}" "$env:ZIP" "$env:SUMS" --clobber

@@ -1,0 +1,295 @@
+[
+  {
+    "name": "Chrome 网页缓存",
+    "category": "browser",
+    "source_template": "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\Cache",
+    "target_subpath": "browsers\\chrome-cache",
+    "note": null
+  },
+  {
+    "name": "Chrome Code Cache",
+    "category": "browser",
+    "source_template": "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\Code Cache",
+    "target_subpath": "browsers\\chrome-code-cache",
+    "note": "应用前建议先关闭 Chrome，否则文件被占用会被跳过"
+  },
+  {
+    "name": "Chrome GPU 缓存",
+    "category": "browser",
+    "source_template": "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\GPUCache",
+    "target_subpath": "browsers\\chrome-gpu-cache",
+    "note": null
+  },
+  {
+    "name": "Chrome Service Worker 脚本缓存",
+    "category": "browser",
+    "source_template": "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\Service Worker\\ScriptCache",
+    "target_subpath": "browsers\\chrome-script-cache",
+    "note": "应用前建议先关闭 Chrome，否则文件被占用会被跳过"
+  },
+  {
+    "name": "Edge 网页缓存",
+    "category": "browser",
+    "source_template": "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\Default\\Cache",
+    "target_subpath": "browsers\\edge-cache",
+    "note": null
+  },
+  {
+    "name": "Edge Code Cache",
+    "category": "browser",
+    "source_template": "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\Default\\Code Cache",
+    "target_subpath": "browsers\\edge-code-cache",
+    "note": "应用前建议先关闭 Edge，否则文件被占用会被跳过"
+  },
+  {
+    "name": "Edge GPU 缓存",
+    "category": "browser",
+    "source_template": "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\Default\\GPUCache",
+    "target_subpath": "browsers\\edge-gpu-cache",
+    "note": null
+  },
+  {
+    "name": "npm 缓存",
+    "category": "dev",
+    "source_template": "%LOCALAPPDATA%\\npm-cache",
+    "target_subpath": "dev\\npm-cache",
+    "note": null
+  },
+  {
+    "name": "pip 缓存",
+    "category": "dev",
+    "source_template": "%LOCALAPPDATA%\\pip\\cache",
+    "target_subpath": "dev\\pip-cache",
+    "note": null
+  },
+  {
+    "name": "uv 缓存",
+    "category": "dev",
+    "source_template": "%LOCALAPPDATA%\\uv\\cache",
+    "target_subpath": "dev\\uv-cache",
+    "note": null
+  },
+  {
+    "name": "Cargo 下载缓存",
+    "category": "dev",
+    "source_template": "%USERPROFILE%\\.cargo\\registry",
+    "target_subpath": "dev\\cargo-registry",
+    "note": "只含源码与 .crate 下载缓存，不含已安装的工具链"
+  },
+  {
+    "name": "VS Code 缓存",
+    "category": "dev",
+    "source_template": "%APPDATA%\\Code\\Cache",
+    "target_subpath": "dev\\vscode-cache",
+    "note": null
+  },
+  {
+    "name": "VS Code Code Cache",
+    "category": "dev",
+    "source_template": "%APPDATA%\\Code\\Code Cache",
+    "target_subpath": "dev\\vscode-code-cache",
+    "note": null
+  },
+  {
+    "name": "VS Code GPU 缓存",
+    "category": "dev",
+    "source_template": "%APPDATA%\\Code\\GPUCache",
+    "target_subpath": "dev\\vscode-gpu-cache",
+    "note": null
+  },
+  {
+    "name": "JetBrains 缓存（PyCharm 等）",
+    "category": "dev",
+    "source_template": "%LOCALAPPDATA%\\JetBrains",
+    "target_subpath": "dev\\jetbrains",
+    "note": "含项目索引缓存，首次启动会重建索引（扫描大项目需要几分钟）"
+  },
+  {
+    "name": "影刀缓存",
+    "category": "dev",
+    "source_template": "%LOCALAPPDATA%\\ShadowBot\\cache",
+    "target_subpath": "dev\\shadowbot-cache",
+    "note": null
+  },
+  {
+    "name": "影刀日志",
+    "category": "dev",
+    "source_template": "%LOCALAPPDATA%\\ShadowBot\\log",
+    "target_subpath": "dev\\shadowbot-log",
+    "note": null
+  },
+  {
+    "name": "用户 .cache 目录",
+    "category": "dev",
+    "source_template": "%USERPROFILE%\\.cache",
+    "target_subpath": "dev\\dot-cache",
+    "note": "pip / uv / huggingface 等各类工具的缓存汇集处，丢弃后按需重建"
+  },
+  {
+    "name": "NuGet 缓存",
+    "category": "dev",
+    "source_template": "%LOCALAPPDATA%\\NuGet",
+    "target_subpath": "dev\\nuget-cache",
+    "note": "HTTP 缓存与插件缓存，丢弃后按需重新下载"
+  },
+  {
+    "name": "NuGet 全局包",
+    "category": "dev",
+    "source_template": "%USERPROFILE%\\.nuget\\packages",
+    "target_subpath": "dev\\nuget-packages",
+    "note": "全局包缓存，丢弃后构建时重新还原（需联网）；离线环境慎用"
+  },
+  {
+    "name": "VS Roslyn 缓存",
+    "category": "dev",
+    "source_template": "%LOCALAPPDATA%\\Microsoft\\VisualStudio\\Roslyn\\Cache",
+    "target_subpath": "dev\\vs-roslyn-cache",
+    "note": null
+  },
+  {
+    "name": "用户 TEMP",
+    "category": "system",
+    "source_template": "%LOCALAPPDATA%\\Temp",
+    "target_subpath": "system\\user-temp",
+    "note": "体积最大也最容易被占用：应用时被占的文件会自动跳过，建议先关闭后台软件",
+    "redirect_mode": "setting",
+    "env_vars": ["TEMP", "TMP"],
+    "env_scope": "user"
+  },
+  {
+    "name": "系统 TEMP",
+    "category": "system",
+    "source_template": "%WINDIR%\\Temp",
+    "target_subpath": "system\\windows-temp",
+    "note": "需要管理员权限：C:\\Windows\\Temp 常被系统组件占用，被占文件会自动跳过",
+    "redirect_mode": "setting",
+    "env_vars": ["TEMP", "TMP"],
+    "env_scope": "machine"
+  },
+  {
+    "name": "NVIDIA DX 着色器缓存",
+    "category": "system",
+    "source_template": "%LOCALAPPDATA%\\NVIDIA\\DXCache",
+    "target_subpath": "system\\nvidia-dx-cache",
+    "note": null
+  },
+  {
+    "name": "NVIDIA GL 着色器缓存",
+    "category": "system",
+    "source_template": "%LOCALAPPDATA%\\NVIDIA\\GLCache",
+    "target_subpath": "system\\nvidia-gl-cache",
+    "note": null
+  },
+  {
+    "name": "D3D 着色器缓存",
+    "category": "system",
+    "source_template": "%LOCALAPPDATA%\\D3DSCache",
+    "target_subpath": "system\\d3dscache",
+    "note": null
+  },
+  {
+    "name": "Steam 网页缓存",
+    "category": "system",
+    "source_template": "%LOCALAPPDATA%\\Steam\\htmlcache",
+    "target_subpath": "system\\steam-htmlcache",
+    "note": null
+  },
+  {
+    "name": "Windows 日志",
+    "category": "system",
+    "source_template": "%WINDIR%\\Logs",
+    "target_subpath": "system\\windows-logs",
+    "note": "CBS / DISM / 安装等日志，丢弃后自重建；需管理员权限"
+  },
+  {
+    "name": "Windows 服务临时目录",
+    "category": "system",
+    "source_template": "%WINDIR%\\SystemTemp",
+    "target_subpath": "system\\windows-system-temp",
+    "note": "系统服务与更新使用的临时目录；需管理员权限"
+  },
+  {
+    "name": "Windows 更新下载缓存",
+    "category": "system",
+    "source_template": "%WINDIR%\\SoftwareDistribution\\Download",
+    "target_subpath": "system\\windows-update-download",
+    "note": "已下载的更新包，Windows 会按需重新下载；需管理员权限，建议先停止 wuauserv"
+  },
+  {
+    "name": "微信网页缓存",
+    "category": "office",
+    "source_template": "%APPDATA%\\Tencent\\xwechat\\radium\\web",
+    "target_subpath": "office\\wechat-radium-web",
+    "note": "只迁这个子目录；整个 xwechat 里有聊天记录，切勿整体迁移"
+  },
+  {
+    "name": "百度网盘缓存",
+    "category": "office",
+    "source_template": "%APPDATA%\\baidu\\BaiduYunKernel\\.accelerate",
+    "target_subpath": "office\\baidu-accelerate",
+    "note": "只迁视频预加载缓存；%APPDATA%\\baidu\\BaiduNetdisk 是程序本体（含 exe/dll/Appx 运行时），其 users 下存登录态，切勿迁移"
+  },
+  {
+    "name": "WPS 缓存",
+    "category": "office",
+    "source_template": "%APPDATA%\\Kingsoft\\office6\\cache",
+    "target_subpath": "office\\wps-cache",
+    "note": "只迁 WPS 的资源缓存（*.keys/.values 与 *cache.merge 一类合并缓存）；程序组件与外壳扩展在 %LOCALAPPDATA%\\Kingsoft\\WPS Office，切勿迁移"
+  },
+  {
+    "name": "飞书缓存",
+    "category": "office",
+    "source_template": "%APPDATA%\\LarkShell\\CodeCache",
+    "target_subpath": "office\\lark-code-cache",
+    "note": "只迁 V8 代码缓存；%APPDATA%\\LarkShell 是 Chromium 用户配置目录（含 Default、登录态、Local State），不可整体迁移"
+  },
+  {
+    "name": "企业微信日志",
+    "category": "office",
+    "source_template": "%APPDATA%\\Tencent\\WXWork\\Log",
+    "target_subpath": "office\\wxwork-log",
+    "note": "只迁日志；企业微信的聊天与账号数据在别处，切勿整体迁移 Tencent 目录"
+  },
+  {
+    "name": "腾讯邮箱缓存",
+    "category": "office",
+    "source_template": "%APPDATA%\\Tencent\\WeMail\\cache",
+    "target_subpath": "office\\wemail-cache",
+    "note": null
+  },
+  {
+    "name": "腾讯会议日志",
+    "category": "office",
+    "source_template": "%APPDATA%\\Tencent\\WeMeet\\Global\\Logs",
+    "target_subpath": "office\\wemeet-log",
+    "note": null
+  },
+  {
+    "name": "腾讯会议资源包缓存",
+    "category": "office",
+    "source_template": "%APPDATA%\\Tencent\\WeMeet\\Global\\Data\\DynamicResourcePackage",
+    "target_subpath": "office\\wemeet-resource-package",
+    "note": "下载的资源包；迁走后首次使用需重新下载"
+  },
+  {
+    "name": "腾讯会议资源缓存",
+    "category": "office",
+    "source_template": "%APPDATA%\\Tencent\\WeMeet\\Global\\Data\\DynamicResource",
+    "target_subpath": "office\\wemeet-resource",
+    "note": "解压落地的动态资源；迁走后需重新下载 / 解压"
+  },
+  {
+    "name": "微信日志",
+    "category": "office",
+    "source_template": "%APPDATA%\\Tencent\\xwechat\\log",
+    "target_subpath": "office\\wechat-log",
+    "note": "只迁日志目录；xwechat 下有聊天记录，切勿整体迁移"
+  },
+  {
+    "name": "百度网盘临时目录",
+    "category": "office",
+    "source_template": "%USERPROFILE%\\Documents\\BaiduNetdiskTmp",
+    "target_subpath": "office\\baidu-netdisk-tmp",
+    "note": "下载 / 合并的中转临时文件；传输进行中清理会影响进度"
+  }
+]

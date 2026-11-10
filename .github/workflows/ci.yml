@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  rust:
+    name: Test and check
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Unit tests
+        run: scripts\cargo.cmd test --workspace
+      - name: Check all targets
+        run: scripts\cargo.cmd check --workspace --all-targets
+
+  ui:
+    name: Static UI syntax
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      # The UI is plain static files with no JS test suite; node --check is the
+      # cheapest guard against syntax errors reaching a release build.
+      - name: node --check
+        run: |
+          node --check crates/sl-gui/ui/i18n.js
+          node --check crates/sl-gui/ui/app.js

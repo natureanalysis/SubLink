@@ -1,0 +1,33 @@
+[package]
+name = "sl-gui"
+description = "SubLink 桌面界面（Tauri 2）"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[[bin]]
+name = "sublink-gui"
+path = "src/main.rs"
+
+[lib]
+name = "sl_gui"
+# 桌面端只需要 rlib。不声明 staticlib / cdylib —— 那两个会多出上百 MB 的
+# 归档产物且无人消费（tauri.conf.json 与打包脚本都不引用它们）。
+crate-type = ["rlib"]
+
+[build-dependencies]
+tauri-build = { version = "=2.6.3", features = [] }
+
+[dependencies]
+sl-core = { path = "../sl-core" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# 精确 pin 到缓存里已有的版本，避免解析到需要更高 tauri 的小版本导致全量重编译。
+tauri = { version = "=2.11.5", features = ["tray-icon"] }
+# 2.5+ 要求 tauri ^2.12，会把锁文件里的 tauri 顶上去 → 精确 pin 复用 2.4.5。
+tauri-plugin-single-instance = "=2.4.5"
+tauri-plugin-dialog = "=2.7.3"
+tauri-plugin-notification = "=2.4.0"
